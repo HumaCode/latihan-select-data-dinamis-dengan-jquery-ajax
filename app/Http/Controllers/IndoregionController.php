@@ -14,9 +14,20 @@ class IndoregionController extends Controller
     {
 
         $provinces = Province::all();
-        $regencies = Regency::all();
-        $districts = District::all();
-        $villages = Village::all();
-        return view('form', compact('provinces', 'regencies', 'districts', 'villages'));
+        // $regencies = Regency::all();
+        // $districts = District::all();
+        // $villages = Village::all();
+        return view('form', compact('provinces'));
+    }
+
+    public function getkabupaten(Request $request)
+    {
+        $id_provinsi = $request->id_provinsi;
+
+        $kabupaten = Regency::where('province_id', $id_provinsi)->get();
+
+        foreach ($kabupaten as $kab) {
+            echo "<option value='$kab->id'>$kab->name</option>";
+        }
     }
 }

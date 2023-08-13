@@ -19,4 +19,5 @@ Route::get('/', function () {
 });
 
 
-Route::get('indoregion', [IndoregionController::class, 'form']);
+Route::get('indoregion', [IndoregionController::class, 'form'])->name('form');
+Route::post('getkabupaten', [IndoregionController::class, 'getkabupaten'])->name('getkabupaten');
