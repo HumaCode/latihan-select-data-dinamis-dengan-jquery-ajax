@@ -8,6 +8,8 @@
     <title>Indoregion</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 </head>
 
 <body>
@@ -20,7 +22,7 @@
                     <div class="card-body">
                         <div class="form-group mb-3">
                             <label for="" class="mb-2">Provinsi</label>
-                            <select class="form-select" aria-label="Default select example" name="provinsi"
+                            <select class="form-select provinsi" aria-label="Default select example" name="provinsi"
                                 id="provinsi">
                                 <option selected>--Pilih Provinsi--</option>
 
@@ -34,28 +36,24 @@
 
                         <div class="form-group mb-3">
                             <label for="" class="mb-2">Kabupaten</label>
-                            <select class="form-select" aria-label="Default select example" name="kabupaten"
+                            <select class="form-select kabupaten" aria-label="Default select example" name="kabupaten"
                                 id="kabupaten">
-                                <option selected>--Pilih Kabupaten--</option>
-
 
                             </select>
                         </div>
 
                         <div class="form-group mb-3">
                             <label for="" class="mb-2">Kecamatan</label>
-                            <select class="form-select" aria-label="Default select example" name="kecamatan"
+                            <select class="form-select kecamatan" aria-label="Default select example" name="kecamatan"
                                 id="kecamatan">
-                                <option selected>--Pilih Kecamatan--</option>
 
                             </select>
                         </div>
 
                         <div class="form-group mb-3">
                             <label for="" class="mb-2">Desa</label>
-                            <select class="form-select" aria-label="Default select example" name="desa"
+                            <select class="form-select desa" aria-label="Default select example" name="desa"
                                 id="desa">
-                                <option selected>--Pilih Desa--</option>
 
                             </select>
                         </div>
@@ -70,8 +68,18 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous">
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 
     <script>
+        $(document).ready(function() {
+            $('.provinsi').select2();
+            $('.kabupaten').select2();
+            $('.kecamatan').select2();
+            $('.desa').select2();
+        })
+
+
         $(function() {
             $.ajaxSetup({
                 headers: {
@@ -96,6 +104,54 @@
                     success: function(msg) {
                         // jika sukses tampilkan data kabupaten berdasarkan id provinsi yang dipilih
                         $('#kabupaten').html(msg);
+                        $('#kecamatan').html('');
+                        $('#desa').html('');
+                    },
+                    error: function(data) {
+                        console.log('error : ', data);
+                    }
+                });
+            })
+
+
+            // ambil id kabupaten
+            $('#kabupaten').on('change', function() {
+                let id_kabupaten = $('#kabupaten').val();
+
+                // kirim id kabupaten ke controller
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('getkecamatan') }}", // untuk mendapatkan data kecamatan berdasarkan id kabupaten 
+                    data: {
+                        id_kabupaten: id_kabupaten
+                    },
+                    cache: false,
+                    success: function(msg) {
+                        // jika sukses tampilkan data kecamatan berdasarkan id kabupaten yang dipilih
+                        $('#kecamatan').html(msg);
+                        $('#desa').html('');
+                    },
+                    error: function(data) {
+                        console.log('error : ', data);
+                    }
+                });
+            })
+
+            // ambil id kecamatan
+            $('#kecamatan').on('change', function() {
+                let id_kecamatan = $('#kecamatan').val();
+
+                // kirim id kecamatan ke controller
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('getdesa') }}", // untuk mendapatkan data desa berdasarkan id kabupaten 
+                    data: {
+                        id_kecamatan: id_kecamatan
+                    },
+                    cache: false,
+                    success: function(msg) {
+                        // jika sukses tampilkan data desa berdasarkan id kecamatan yang dipilih
+                        $('#desa').html(msg);
                     },
                     error: function(data) {
                         console.log('error : ', data);

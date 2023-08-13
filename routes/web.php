@@ -21,3 +21,5 @@ Route::get('/', function () {
 
 Route::get('indoregion', [IndoregionController::class, 'form'])->name('form');
 Route::post('getkabupaten', [IndoregionController::class, 'getkabupaten'])->name('getkabupaten');
+Route::post('getkecamatan', [IndoregionController::class, 'getkecamatan'])->name('getkecamatan');
+Route::post('getdesa', [IndoregionController::class, 'getdesa'])->name('getdesa');
